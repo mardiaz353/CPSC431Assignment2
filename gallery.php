@@ -88,7 +88,7 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 	
 	$store_info_query = "INSERT INTO Images (fileName, name, date, photographer, location, image) VALUES($fileName, $getPhotoName, $getDateTaken, $getPhotoGrapher, $getLocation, $uploaded_file)";
 	
-	if(mysql_query($conn->query($store_info_query)==TRUE) {
+	if(mysql_query($conn->query($store_info_query)==TRUE)) {
 		echo "New record entered successfully";
 	} else {
 		echo "Error: ".$store_info_query."<br>".$conn->error;
@@ -129,7 +129,7 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 		}
 	} */
 
-    mysql_close($conn);
+    //mysql_close($conn);
 
 }
 
@@ -179,12 +179,12 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 
 $answer='name';
 //If the user has pressed the ok button for sort....
-$dbhost = "ecs.fullerton.edu/~cs431s28/phpmyadmin/";
-$dbusername = "cs431s28";
-$dbpassword = "Moh3poox";
+//$dbhost = "mariadb";
+//$dbusername = "cs431s28";
+//$dbpassword = "Moh3poox";
 //Connect to the database
-$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
-$image_data = $mysql->query("SELECT * FROM Images");
+//$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
+$image_data = $mysql->query("FROM cs431s28 SELECT * FROM Images");
 //Display error msg if can't connect
 if(!$conn) {
 	die('Could not connect: '.mysql_error());
