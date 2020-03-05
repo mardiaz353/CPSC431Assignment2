@@ -1,5 +1,8 @@
+
+
 <?php
 // since the schools server does not support array_column I wrote it here
+// SORTING HELPER FUNCTION
 if (! function_exists('array_column')) {
     function array_column(array $input, $columnKey, $indexKey = null) {
         $array = array();
@@ -27,8 +30,12 @@ if (! function_exists('array_column')) {
     }
 }
 ?>
+
+
+
 <?php
 // Checks if input is valid
+
 if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     // variables
     $file = $_FILES['fileToUpload'];
@@ -50,39 +57,20 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     } 
      $uploaded_file = 'uploads/'.$fileName;
 
-     if(is_uploaded_file($fileTmpName)){
-         if(!move_uploaded_file($fileTmpName,$uploaded_file)){
-             echo 'Problem: Could not move file to destination directory';
-             exit;
-         }
-    }
-    else {
-        echo 'Problem: Possible file upload attack. Filename: '. $fileName;
-        exit;
-    }
-    ?>
-
-    <?php
-	//Save meta data and name of image file to a text document
-    //$fp = fopen("gallery.txt", 'ab');
-	$dbhost = "ecs.fullerton.edu/~ecs.fullerton.edu/~cs431s28/";
+	//Establish parameters for db connection
+	$dbhost = "mariadb";
 	$dbusername = "cs431s28";
 	$dbpassword = "Moh3poox";
-	//$dbname = "cs431s28";
+
+	//Connect to the database and apply db parameters
 	$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
 	
+	//Display error msg if can't connect
 	if(!$conn) {
 		die('Could not connect: '.mysql_error());
 	}
 	
 	echo 'Connected successfully';
-	
-    
-    if(!$fp){ // if fopen fails exit
-        echo '<p><strong> Your order could not be processed at this time. 
-        .Please try again later.</strong></p></body></html>';
-        exit;
-    }
     
     // all input is trimed and uppercase
 	$getPhotoName = strtoupper(trim($_POST['photoName'])); // input variables 
@@ -93,43 +81,56 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     $outputString = $fileName."\t".$getPhotoName."\t".// string to append
     $getDateTaken."\t".$getPhotoGrapher."\t".$getLocation."\n";
 	
-	//Instead of putting the information in a text file
-	//I need to store it in the database
+	
+	//This code stores the newest entry into the db
 	
 	//From the cs431s28 db select the Images table and put these variables inside
-	$query = "FROM cs431s28 SELECT Images INSERT INTO (name, date, photographer, location) VALUES($getPhotoName, $getDateTaken, $getPhotoGrapher, $getLocation)";
-    if(mysql_query($conn, $query)) {
+	
+	$store_info_query = "INSERT INTO Images (fileName, name, date, photographer, location, image) VALUES($fileName, $getPhotoName, $getDateTaken, $getPhotoGrapher, $getLocation, $uploaded_file)";
+	
+	if(mysql_query($conn->query($store_info_query)==TRUE) {
 		echo "New record entered successfully";
 	} else {
-		echo "Could not enter record, error line 104";
+		echo "Error: ".$store_info_query."<br>".$conn->error;
 	}
 	
-	$img_query = "FROM cs431s28 SELECT Images INSERT INTO (fileName, image) VALUES ($fileName, $uploaded_file)";
-	
-	//fclose($fp);
 	mysql_close($conn);
     ?>
 	
 <?php
     // Read file and add data to array and show pictures.
-    $fp = fopen("gallery.txt", 'rb');
+	//The purpose of these lines was to store the contents of the 
+	//txt file into an array to manipulate and display output
+    
+	$bigarray = [];
+	$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
+	
+	//Display error msg if can't connect
+	if(!$conn) {
+		die('Could not connect: '.mysql_error());
+	}
+	
+	echo 'Connected successfully';
 
-    if(!$fp){
-        echo 'error reading file!';
-        exit;
-    }
-
-    $bigarray = [];
-
-    while(!feof($fp)){
-        $lines = fgets($fp); // gets the whole line
-        if($lines === false) break; // deletes empty line at the end
-        $line = explode("\t",$lines); // explodes the lines into separate varaibles
-        $tmparray = [$line[0],$line[1],$line[2],$line[3],$line[4]]; // pushing to an array
+	$sql = "SELECT * FROM IMAGES";
+	
+    
+	$result = $conn->query($sql);
+	
+	//Not sure what purpose storing in array will serve moving foward
+	//so stopped working on this section for now
+	
+    /* while($rewult->num_rows > 0){
+		while($row = $result->fetch_assoc()){
+			if($lines === false) break; // deletes empty line at the end
+				$line = explode("\t",$lines); // explodes the lines into separate varaibles
+				$tmparray = [$line[0],$line[1],$line[2],$line[3],$line[4]]; // pushing to an array
         array_push($bigarray,$tmparray);
-    }
+		}
+	} */
 
-    fclose($fp); // close file
+    mysql_close($conn);
+
 }
 
 ?>
@@ -174,28 +175,37 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     </table>
 </form>
     <div>
-        <?php
-        $answer='name';
+<?php
+
+$answer='name';
 //If the user has pressed the ok button for sort....
+$dbhost = "ecs.fullerton.edu/~cs431s28/phpmyadmin/";
+$dbusername = "cs431s28";
+$dbpassword = "Moh3poox";
+//Connect to the database
+$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
+$image_data = $mysql->query("SELECT * FROM Images");
+//Display error msg if can't connect
+if(!$conn) {
+	die('Could not connect: '.mysql_error());
+	}
+echo 'Connected successfully';
+
+//This code displays the images in the gallery
 if (isset($_POST["ok"])) {
 //...have gallery.txt be read into $bigarray since the form has refreshed...
-	 $fp = fopen("gallery.txt", 'rb');
-
-    if(!$fp){
-        echo 'error reading file';
-    }
+//   Instead of reading from a txt file, we read in from a db
+	 //$fp = fopen("gallery.txt", 'rb');
 	
     $answer = $_POST["sort"];
-    $bigarray = [];
 
-    while(!feof($fp)){
-        $lines = fgets($fp); // gets the whole line
-        if($lines === false) break; // deletes empty line at the end
-        $line = explode("\t",$lines); // explodes the lines into separate varaibles
-        $tmparray = [$line[0],$line[1],$line[2],$line[3],$line[4]]; // pushing to an array
-        array_push($bigarray,$tmparray);
-    }
-    fclose($fp); // close file
+	if($image_data=num_rows > 0) {
+		while($row=$image_data->fetch_assoc()) {
+			echo "fileName: ".$row["fileName"]."name: ".$row["name"]."date: ".$row["date"]."<br>";
+		}
+	}
+	mysql_close($conn);
+
 }
 
 // ...And sort the array according to which "sort" method the user selected in the dropdown
