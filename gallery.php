@@ -34,6 +34,7 @@ if (! function_exists('array_column')) {
 
 
 <?php
+echo "Current PHP version: ".phpversion();
 // Checks if input is valid
 
 if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
@@ -72,6 +73,13 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 	
 	echo 'Connected successfully';
     
+	//Select database
+	$db_selected = mysql_select_db("cs431s28", $conn);
+	if(!db_selected) {
+		die ("Can't use cs431s28".mysql_error());
+	}
+	echo "line 81 \n";
+	
     // all input is trimed and uppercase
 	$getPhotoName = strtoupper(trim($_POST['photoName'])); // input variables 
 	$getDateTaken = trim($_POST['dateTaken']); // use _POST because its safer
@@ -80,28 +88,28 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 
     $outputString = $fileName."\t".$getPhotoName."\t".// string to append
     $getDateTaken."\t".$getPhotoGrapher."\t".$getLocation."\n";
-	
-	
-	//This code stores the newest entry into the db
-	
+
+	echo "\n line 92";
 	//From the cs431s28 db select the Images table and put these variables inside
-	
+	echo "line 91 \n";
 	$store_info_query = "INSERT INTO Images (fileName, name, date, photographer, location, image) VALUES($fileName, $getPhotoName, $getDateTaken, $getPhotoGrapher, $getLocation, $uploaded_file)";
+	echo "line 96 \n";
 	
-	if(mysql_query($conn->query($store_info_query)==TRUE)) {
+	echo "line 98";
+	if(mysql_query($store_info_query, $conn)) {
 		echo "New record entered successfully";
 	} else {
 		echo "Error: ".$store_info_query."<br>".$conn->error;
 	}
-	
 	mysql_close($conn);
+	echo "line 105";
     ?>
 	
 <?php
     // Read file and add data to array and show pictures.
 	//The purpose of these lines was to store the contents of the 
 	//txt file into an array to manipulate and display output
-    
+    echo "line 111";
 	$bigarray = [];
 	$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
 	
@@ -114,7 +122,7 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 
 	$sql = "SELECT * FROM IMAGES";
 	
-    
+    echo "line 124";
 	$result = $conn->query($sql);
 	
 	//Not sure what purpose storing in array will serve moving foward
@@ -184,6 +192,7 @@ $answer='name';
 //$dbpassword = "Moh3poox";
 //Connect to the database
 //$conn = mysql_connect($dbhost, $dbusername, $dbpassword);
+echo "line 194";
 $image_data = $mysql->query("FROM cs431s28 SELECT * FROM Images");
 //Display error msg if can't connect
 if(!$conn) {
