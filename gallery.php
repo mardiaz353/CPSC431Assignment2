@@ -91,8 +91,8 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 
 	echo "\n line 92";
 	//From the cs431s28 db select the Images table and put these variables inside
-	echo "line 91 \n";
-	$store_info_query = "INSERT INTO Images (fileName, name, date, photographer, location, image) VALUES($fileName, $getPhotoName, $getDateTaken, $getPhotoGrapher, $getLocation, $uploaded_file)";
+	echo "line 94 \n";
+	$store_info_query = "INSERT INTO `Images` (`fileName`, `name`, `date`, `photographer`, `location`, `image`) VALUES('$fileName', '$getPhotoName', '$getDateTaken', '$getPhotoGrapher', '$getLocation', '$uploaded_file')";
 	echo "line 96 \n";
 	
 	echo "line 98";
@@ -123,7 +123,7 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 	$sql = "SELECT * FROM IMAGES";
 	
     echo "line 124";
-	$result = $conn->query($sql);
+	$result = $conn->mysql_query($sql);
 	
 	//Not sure what purpose storing in array will serve moving foward
 	//so stopped working on this section for now
