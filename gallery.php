@@ -82,20 +82,30 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 /* --------------------Establish a Database connection and Inserting Data -----------*/
 
     //Connect to the database and display error msg if can't connect
-    $db = mysqli_connect("localhost", "root", "","Images") //dbHost,bdUsername,dbPassword,dbName
-    or die('Cannot Connect To Database.' . mysqli_connect_error());
+	$dbhost = "mariadb";
+	$dbusername = "cs431s28";
+	$dbpassword = "Moh3poox";
+    $db = mysql_connect($dbhost, $dbusername, $dbpassword); //dbHost,bdUsername,dbPassword,dbName
+ 
 
     // echo 'Connected successfully';
+	//Display error msg if can't connect
+	if(!$db) {
+		die('Could not connect: '.mysql_error());
+	}
+	echo 'Connected successfully';
+	//Select the co
+	$db_selected = mysql_select_db("cs431s28", $db);
 
     //Insert query to DB
     $insertQuery = "INSERT INTO `Images` 
     (`fileName`, `name`, `date`, `photographer`, `location`, `image`) 
     VALUES ('$fileName','$getPhotoName','$getDateTaken','$getPhotoGrapher','$getLocation','$uploaded_file')";
     // if query works tell user
-    echo (mysqli_query($db,$insertQuery)) ? "" : "</br>image not uploaded";
+    echo (mysql_query($db,$insertQuery)) ? "" : "</br>image not uploaded";
 
     // close the database;
-    mysqli_close($db);
+    mysql_close($db);
     /* -------------------- End Connectoin and Insert Query ----------------------*/
 }
 ?>
@@ -147,27 +157,41 @@ if(isset($_POST["ok"])) {
     $answer = $_POST["sort"];
 }
 // default sort
-$sql = "SELECT * FROM Images ORDER BY name";
+$sql = "SELECT * FROM `Images` ORDER BY `name`";
 // Select sql to query
 if($answer === 'name'){
-    $sql = "SELECT * FROM Images ORDER BY name";
+    $sql = "SELECT * FROM `Images` ORDER BY `name`";
 } else if($answer === 'date'){
-    $sql = "SELECT * FROM Images ORDER BY date";
+    $sql = "SELECT * FROM `Images` ORDER BY `date`";
 } else if($answer === 'photographer'){
-    $sql = "SELECT * FROM Images ORDER BY photographer";
+    $sql = "SELECT * FROM `Images` ORDER BY `photographer`";
 } else if($answer === 'location'){
-    $sql = "SELECT * FROM Images ORDER BY location";
+    $sql = "SELECT * FROM `Images` ORDER BY `location`";
 }
 
-$db = mysqli_connect("localhost", "root", "","Images") //dbHost,bdUsername,dbPassword,dbName
-or die('Cannot Connect To Database.' . mysqli_connect_error());
+//Connect to the database and display error msg if can't connect
+$dbhost = "mariadb";
+$dbusername = "cs431s28";
+$dbpassword = "Moh3poox";
+$db = mysql_connect($dbhost, $dbusername, $dbpassword); //dbHost,bdUsername,dbPassword,dbName
+ 
+
+// echo 'Connected successfully';
+//Display error msg if can't connect
+if(!$db) {
+	die('Could not connect: '.mysql_error());
+}
+echo 'Connected successfully';
+//Select the co
+$db_selected = mysql_select_db("cs431s28", $db);
+
 
 // echo "connected successfully";
 
-$result = mysqli_query($db,$sql);
+$result = mysql_query($db,$sql);
 
 // Display the Images selected 
-while($row = mysqli_fetch_row($result)) {
+while($row = mysql_fetch_row($result)) {
     echo '<div class="list-content">'; // fileName 
     echo'<img class="picture-content" src="'.$row[6].'"/ alt="Error on Displaying"></img>';
     echo'<div class="data-box">'. 'Name: '.$row[2].'</div>'; // name
@@ -177,8 +201,8 @@ while($row = mysqli_fetch_row($result)) {
     echo'</div>';
 }
 // free memory and close the database;
-mysqli_free_result($result);
-mysqli_close($db);
+mysql_free_result($result);
+mysql_close($db);
 /* -----------------------------Ending The Connection-----------------------*/
 ?>
 </body>
