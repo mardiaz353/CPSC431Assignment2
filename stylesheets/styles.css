@@ -1,0 +1,113 @@
+@font-face {
+  font-family: 'airstreamregular';
+  src: url('fonts/Airstream-webfont.eot');
+  src: url('fonts/Airstream-webfont.eot?#iefix') format('embedded-opentype'),
+      url('fonts/Airstream-webfont.woff') format('woff'),
+      url('fonts/Airstream-webfont.ttf') format('truetype'),
+      url('fonts/Airstream-webfont.svg#airstreamregular') format('svg');
+      font-weight: normal;
+      font-style: normal;
+}
+h1{
+    font-size: 30px;
+    color: #000000;;
+    text-transform: uppercase;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    font-family: airstreamregular;
+  }
+
+  table{
+    width:100%;
+    table-layout: fixed;
+    color: #000000;
+    border:black;
+  }
+
+
+  body {
+    background: rgb(149,194,215);
+  }
+
+  .submit-cell {
+    width: 80%;
+    border: none;
+    text-align: center;    
+  }
+
+  .textfield-cell {
+    width: 100%;
+    text-align: center;
+    align-content: left;
+  }
+
+  .cell-text {
+    font-size: 15px;
+    text-transform: uppercase;
+    text-align: right;
+    padding: 12px 20px;
+    font-family: "Roboto";
+  }
+
+  .list-content {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-top: 50px;
+  }
+
+  .picture-content {
+    display: inline-block;
+    width: 400px;
+    height: 400px;
+    border: 1px solid blue;
+    background: yellow;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .data-box {
+    display: block;
+    /* text-align: center; */
+  }
+
+  /* .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  } */
+
+  /* .dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+  }
+
+  .dropdown_hover {
+    display: inline-block;
+    padding: 10px;
+    background: #323b40;
+    color: white;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .dropdown_hover:hover {
+    background: #222;
+  }
+
+  .dropdown_menu {
+    position: absolute;
+    top: 100%;
+    min-width: 200px;
+    background: white;
+    color: #323b40;
+  }
+
+  .dropdown:hover .dropdown_menu {
+    display: block;
+    padding: 10px;
+  } */
