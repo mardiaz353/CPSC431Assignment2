@@ -15,13 +15,13 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     $getPhotoGrapher = strtoupper(trim($_POST['photographer']));
     $getLocation = strtoupper(trim($_POST['location']));
 
-    // All Entries have to be filed
+     //All Entries have to be filed
     if(!$getPhotoName || !$getDateTaken || !$getPhotoGrapher || !$getLocation){
         echo "<p> You have have to enter all the entries</p>";
         exit;
     }
 
-    // if input is not uppercase then its a error
+     //if input is not uppercase then its a error
     if(!preg_match("/^[A-Z\d]+$/", $getPhotoName)) {
         echo "<p>Invalid Photo Name</p>";
         exit;
@@ -66,7 +66,7 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     
     $uploaded_file = 'uploads/'.$fileName;
 
-    if(is_uploaded_file($fileTmpName)){
+    if(is_uploaded_file($fileTmpName, 'uploads/')){
         if(!move_uploaded_file($fileTmpName,$uploaded_file)){
             echo 'Problem: Could not move file to destination directory';
             exit;
@@ -93,7 +93,7 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
 	if(!$db) {
 		die('Could not connect: '.mysql_error());
 	}
-	echo 'Connected successfully';
+	//echo 'Connected successfully';
 	//Select the co
 	$db_selected = mysql_select_db("cs431s28", $db);
 
@@ -101,9 +101,16 @@ if(isset($_POST["submit"])) { //if a variable is declared when submit is pressed
     $insertQuery = "INSERT INTO `Images` 
     (`fileName`, `name`, `date`, `photographer`, `location`, `image`) 
     VALUES ('$fileName','$getPhotoName','$getDateTaken','$getPhotoGrapher','$getLocation','$uploaded_file')";
+    
+    
     // if query works tell user
-    echo (mysql_query($db,$insertQuery)) ? "" : "</br>image not uploaded";
+    $retval = mysql_query($insertQuery,$db);
+    
+    if(! $retval){
+        die('Could not enter data: ' . mysql_error());
+    }
 
+    //echo "enterned data successfully\n";
     // close the database;
     mysql_close($db);
     /* -------------------- End Connectoin and Insert Query ----------------------*/
@@ -181,14 +188,18 @@ $db = mysql_connect($dbhost, $dbusername, $dbpassword); //dbHost,bdUsername,dbPa
 if(!$db) {
 	die('Could not connect: '.mysql_error());
 }
-echo 'Connected successfully';
+//echo 'Connected successfully';
+    
+    
 //Select the co
 $db_selected = mysql_select_db("cs431s28", $db);
-
-
+    
 // echo "connected successfully";
 
-$result = mysql_query($db,$sql);
+$result = mysql_query($sql,$db);
+    if(!$result) {
+        die('Could not enter data: ' . mysql_error());
+    }
 
 // Display the Images selected 
 while($row = mysql_fetch_row($result)) {
